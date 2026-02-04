@@ -9,7 +9,12 @@ import getDescendingTreeData from "../../utils/utils";
 export default function TreeGraph() {
   const [zoom, setZoom] = useState(0.4);
   const handleZoomIn = () => {
-    setZoom((prevZoom) => parseFloat((prevZoom + 0.1).toFixed(1)));
+    setZoom((prevZoom) => {
+      if (prevZoom < 1.1) {
+        return parseFloat((prevZoom + 0.1).toFixed(1));
+      }
+      return prevZoom;
+    });
   };
 
   const handleZoomOut = () => {
