@@ -3,8 +3,8 @@ import Tree from "react-d3-tree";
 import "./custom-tree.css";
 import { TfiZoomIn } from "react-icons/tfi";
 import { TfiZoomOut } from "react-icons/tfi";
-import data from "./../../../public/data";
 import getDescendingTreeData from "../../utils/utils";
+import { useGraphData } from "../../context/DataContext";
 
 export default function TreeGraph() {
   const [zoom, setZoom] = useState(0.4);
@@ -25,7 +25,9 @@ export default function TreeGraph() {
       return prevZoom;
     });
   };
-  const tree_data = getDescendingTreeData(data);
+  const { graphData } = useGraphData();
+  console.log(graphData);
+  const tree_data = getDescendingTreeData(graphData);
   const translate = { x: 600, y: 50 };
   return (
     <div className="flex justify-center">

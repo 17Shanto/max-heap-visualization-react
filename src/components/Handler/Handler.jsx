@@ -1,13 +1,16 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useGraphData } from "../../context/DataContext";
 
 const Handler = () => {
-  //   const { graphData, setGraphData } = useGraphData();
+  const [id, setId] = useState(30);
+  const { graphData, updateGraphData } = useGraphData();
   const weightInputRef = useRef(null);
   const handleSubmit = () => {
+    setId((prevId) => prevId + 1);
     const value = weightInputRef.current.value;
-    const weightNumber = parseFloat(value);
-    console.log(weightNumber);
+    const weightValue = parseFloat(value);
+    const newData = [...graphData, { personId: id, weight: weightValue }];
+    updateGraphData(newData);
   };
   return (
     <div>
