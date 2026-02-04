@@ -34,7 +34,7 @@ export default function TreeGraph() {
       <div
         id="treeWrapper"
         className="relative"
-        style={{ width: "70em", height: "120em", border: "1px solid #ccc" }}
+        style={{ width: "70em", height: "38em", border: "1px solid #ccc" }}
       >
         <div className="">
           <button

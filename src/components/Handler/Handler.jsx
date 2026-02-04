@@ -24,9 +24,18 @@ const Handler = () => {
             ref={weightInputRef}
           />
         </fieldset>
-        <button onClick={handleSubmit} className="btn btn-warning mt-2">
-          Submit
-        </button>
+        <div className="">
+          <button onClick={handleSubmit} className="btn btn-warning mt-2">
+            Submit
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <button className="btn btn-info">
+            <span className="loading loading-spinner"></span>
+            Reset
+          </button>
+        </div>
       </div>
     </div>
   );
