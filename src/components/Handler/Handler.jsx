@@ -3,9 +3,9 @@ import React, { useRef } from "react";
 const Handler = () => {
   const weightInputRef = useRef(null);
   const handleSubmit = () => {
-    // 3. Access the value directly from the DOM element
     const value = weightInputRef.current.value;
     const weightNumber = parseFloat(value);
+    console.log(weightNumber);
   };
   return (
     <div>
