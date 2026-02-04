@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
+import { useGraphData } from "../../context/DataContext";
 
 const Handler = () => {
+  //   const { graphData, setGraphData } = useGraphData();
   const weightInputRef = useRef(null);
   const handleSubmit = () => {
     const value = weightInputRef.current.value;

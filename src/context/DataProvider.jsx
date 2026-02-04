@@ -1,9 +1,10 @@
-import React, { createContext, useState } from "react";
+import React, { useState } from "react";
+import { DataContext } from "./DataContext"; // Import from the other file
 import data from "../../public/data";
-const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const [graphData, setGraphData] = useState(data);
+
   const updateGraphData = (newData) => {
     setGraphData(newData);
   };
