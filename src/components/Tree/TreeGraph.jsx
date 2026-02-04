@@ -25,7 +25,6 @@ export default function TreeGraph() {
       return prevZoom;
     });
   };
-  console.log(zoom);
   const tree_data = getDescendingTreeData(data);
   const translate = { x: 600, y: 50 };
   return (
@@ -38,7 +37,7 @@ export default function TreeGraph() {
         <div className="">
           <button
             onClick={handleZoomIn}
-            className="btn btn-sm btn-outline btn-success absolute top-4 right-24 z-10"
+            className="btn btn-sm  btn-soft btn-info absolute top-4 right-16 z-10"
           >
             <span className="text-xl">
               <TfiZoomIn />
@@ -46,7 +45,7 @@ export default function TreeGraph() {
           </button>
           <button
             onClick={handleZoomOut}
-            className="btn btn-sm btn-outline btn-success absolute top-4 right-4 z-10"
+            className="btn btn-sm btn-soft btn-secondary absolute top-4 right-4 z-10"
           >
             <span className="text-xl">
               <TfiZoomOut />
