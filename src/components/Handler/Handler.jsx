@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useGraphData } from "../../context/DataContext";
 
 const Handler = () => {
-  const [id, setId] = useState(30);
+  const [id, setId] = useState(31);
   const { graphData, updateGraphData } = useGraphData();
   const weightInputRef = useRef(null);
   const handleSubmit = () => {
