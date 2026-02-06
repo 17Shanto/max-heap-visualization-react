@@ -38,9 +38,7 @@ const Controls = ({
   return (
     <div className="w-full bg-card border border-border rounded-xl shadow-sm p-3">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        {/* Left Side: Actions (Play, Step, Extract) */}
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Play/Pause */}
           <button
             onClick={isPlaying ? onPause : onPlay}
             disabled={!canPlay && !isPlaying}
@@ -62,7 +60,6 @@ const Controls = ({
             )}
           </button>
 
-          {/* Step Forward */}
           <button
             onClick={onStepForward}
             disabled={isPlaying || !canPlay}
@@ -74,7 +71,6 @@ const Controls = ({
 
           <div className="w-px h-6 bg-border mx-1"></div>
 
-          {/* Extract Button */}
           <button
             onClick={onExtractAll}
             disabled={!canExtract || isPlaying}
@@ -102,9 +98,7 @@ const Controls = ({
           </button>
         </div>
 
-        {/* Right Side: Settings & Reset */}
         <div className="flex items-center gap-3 ml-auto">
-          {/* Speed Selector */}
           <div className="flex items-center gap-2 bg-muted/50 rounded-lg px-2 h-10 border border-border/50">
             <Gauge size={14} className="text-muted-foreground" />
             <select

@@ -15,8 +15,13 @@ import {
 } from "@/utils/heapUtils";
 
 type Mode = "idle" | "inserting" | "extracting";
+type Theme = "dark" | "light";
 
 const Index = () => {
+  // --- Theme State ---
+  const [theme, setTheme] = useState<Theme>("light");
+
+  // --- Heap Sort State ---
   const [inputStack, setInputStack] = useState<HeapItem[]>(() =>
     getDefaultData(),
   );
@@ -34,6 +39,18 @@ const Index = () => {
   const stepIndexRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isPlayingRef = useRef(false);
+
+  // --- Theme Effect ---
+  // This toggles the 'dark' class on the HTML element
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
 
   // Keep ref in sync
   useEffect(() => {
@@ -76,12 +93,10 @@ const Index = () => {
     timerRef.current = setTimeout(playNextStep, speed);
   }, [applyStep, speed]);
 
-  // Start insertion (Play button)
   const handlePlay = useCallback(() => {
     if (isPlaying) return;
 
     if (mode === "idle" || mode === "inserting") {
-      // Generate insertion steps from current state
       const steps = generateInsertionSteps(heap, inputStack, sortedList);
       if (steps.length === 0) return;
 
@@ -89,12 +104,10 @@ const Index = () => {
       stepIndexRef.current = 0;
       setMode("inserting");
     }
-    // If we were paused, just resume from current step index
 
     setIsPlaying(true);
     isPlayingRef.current = true;
 
-    // Start stepping
     timerRef.current = setTimeout(playNextStep, 100);
   }, [isPlaying, mode, heap, inputStack, sortedList, playNextStep]);
 
@@ -104,7 +117,6 @@ const Index = () => {
     clearTimer();
   }, [clearTimer]);
 
-  // Extract All button
   const handleExtractAll = useCallback(() => {
     if (heap.length === 0) return;
 
@@ -150,7 +162,6 @@ const Index = () => {
     }
   }, [mode, heap, inputStack, sortedList, applyStep]);
 
-  // Add new item during sorting
   const handleAddItem = useCallback(
     (weight: number) => {
       const newItem: HeapItem = {
@@ -161,9 +172,7 @@ const Index = () => {
       setInputStack((prev) => {
         const updated = [...prev, newItem];
 
-        // If currently inserting, regenerate remaining steps to include new item
         if (isPlayingRef.current && mode === "inserting") {
-          // Pause briefly, regenerate steps, and continue
           const currentStepIdx = stepIndexRef.current;
           const currentStep =
             currentStepIdx > 0 ? stepsRef.current[currentStepIdx - 1] : null;
@@ -174,7 +183,6 @@ const Index = () => {
               [...currentStep.inputStack, newItem],
               currentStep.sortedList,
             );
-            // Replace remaining steps
             stepsRef.current = [
               ...stepsRef.current.slice(0, currentStepIdx),
               ...newSteps,
@@ -212,7 +220,7 @@ const Index = () => {
   const canExtract = heap.length > 0 && !isPlaying;
 
   return (
-    <div className="flex flex-col h-dvh bg-background lg:overflow-hidden overflow-y-auto">
+    <div className="flex flex-col h-dvh bg-background lg:overflow-hidden overflow-y-auto transition-colors duration-300">
       {/* Header */}
       <header className="flex-shrink-0 flex items-center justify-between px-4 lg:px-6 py-3 border-b border-border bg-card">
         <div className="flex items-center gap-3">
@@ -225,9 +233,59 @@ const Index = () => {
             Heap Sort Visualizer
           </h1>
         </div>
-        <span className="text-[10px] lg:text-xs font-mono text-muted-foreground hidden sm:inline-block">
-          Max-Heap · Descending Order
-        </span>
+
+        <div className="flex items-center gap-4">
+          <span className="text-[10px] lg:text-xs font-mono text-muted-foreground hidden sm:inline-block">
+            Max-Heap · Descending Order
+          </span>
+
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-md hover:bg-primary hover:text-accent-foreground transition-colors border border-transparent hover:border-border"
+            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            {" "}
+            {theme === "dark" ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
+              </svg>
+            ) : (
+              // Moon Icon
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+              </svg>
+            )}
+          </button>
+        </div>
       </header>
 
       <div className="flex-shrink-0 px-4 lg:px-6 py-3">
@@ -247,10 +305,10 @@ const Index = () => {
       </div>
 
       <div className="flex-1 flex flex-col lg:flex-row gap-4 px-4 lg:px-6 pb-4 lg:overflow-hidden">
-        <div className="w-full lg:w-72 flex-shrink-0 bg-card border border-border rounded-xl p-4 overflow-hidden h-[300px] lg:h-full">
+        <div className="w-full lg:w-72 flex-shrink-0 bg-card border border-border rounded-xl p-4 overflow-hidden h-[300px] lg:h-full transition-colors duration-300">
           <InputStack items={inputStack} onAddItem={handleAddItem} />
         </div>
-        <div className="w-full lg:flex-1 bg-card border border-border rounded-xl p-4 overflow-hidden flex flex-col min-h-[400px] lg:min-h-0 h-full">
+        <div className="w-full lg:flex-1 bg-card border border-border rounded-xl p-4 overflow-hidden flex flex-col min-h-[400px] lg:min-h-0 h-full transition-colors duration-300">
           <TreeVisualization
             heap={heap}
             highlightedIndices={highlightedIndices}
@@ -259,7 +317,7 @@ const Index = () => {
           />
         </div>
 
-        <div className="w-full lg:w-56 flex-shrink-0 bg-card border border-border rounded-xl p-4 overflow-hidden h-[200px] lg:h-full">
+        <div className="w-full lg:w-56 flex-shrink-0 bg-card border border-border rounded-xl p-4 overflow-hidden h-[200px] lg:h-full transition-colors duration-300">
           <SortedList items={sortedList} />
         </div>
       </div>
