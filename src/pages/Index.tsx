@@ -213,26 +213,28 @@ const Index = () => {
   const canExtract = heap.length > 0 && !isPlaying;
 
   return (
-    <div className="flex flex-col h-screen bg-background overflow-hidden">
+    // Replaced h-screen with h-dvh (dynamic viewport height) for better mobile support
+    // Added overflow handling logic
+    <div className="flex flex-col h-dvh bg-background lg:overflow-hidden overflow-y-auto">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-3 border-b border-border bg-card">
+      <header className="flex-shrink-0 flex items-center justify-between px-4 lg:px-6 py-3 border-b border-border bg-card">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
             <span className="text-primary-foreground font-display font-bold text-sm">
               H
             </span>
           </div>
-          <h1 className="font-display font-bold text-lg text-foreground">
+          <h1 className="font-display font-bold text-base lg:text-lg text-foreground">
             Heap Sort Visualizer
           </h1>
         </div>
-        <span className="text-xs font-mono text-muted-foreground">
+        <span className="text-[10px] lg:text-xs font-mono text-muted-foreground hidden sm:inline-block">
           Max-Heap · Descending Order
         </span>
       </header>
 
       {/* Controls */}
-      <div className="px-6 py-3">
+      <div className="flex-shrink-0 px-4 lg:px-6 py-3">
         <Controls
           isPlaying={isPlaying}
           canPlay={canPlay}
@@ -248,15 +250,17 @@ const Index = () => {
         />
       </div>
 
-      {/* Main content */}
-      <div className="flex-1 flex gap-4 px-6 pb-4 overflow-hidden">
-        {/* Input Stack */}
-        <div className="w-72 flex-shrink-0 bg-card border border-border rounded-xl p-4 overflow-hidden">
+      {/* Main content - Flex Col on Mobile, Row on Desktop */}
+      <div className="flex-1 flex flex-col lg:flex-row gap-4 px-4 lg:px-6 pb-4 lg:overflow-hidden">
+        {/* Input Stack - Full width on mobile, w-72 on Desktop */}
+        {/* On mobile, we let it be auto height, on desktop we fill height */}
+        <div className="w-full lg:w-72 flex-shrink-0 bg-card border border-border rounded-xl p-4 overflow-hidden h-[300px] lg:h-full">
           <InputStack items={inputStack} onAddItem={handleAddItem} />
         </div>
 
-        {/* Tree Visualization */}
-        <div className="flex-1 bg-card border border-border rounded-xl p-4 overflow-hidden flex flex-col">
+        {/* Tree Visualization - Full width on mobile, Flex-1 on Desktop */}
+        {/* Added min-h to ensure visibility on mobile */}
+        <div className="w-full lg:flex-1 bg-card border border-border rounded-xl p-4 overflow-hidden flex flex-col min-h-[400px] lg:min-h-0 h-full">
           <TreeVisualization
             heap={heap}
             highlightedIndices={highlightedIndices}
@@ -265,8 +269,8 @@ const Index = () => {
           />
         </div>
 
-        {/* Sorted List */}
-        <div className="w-56 flex-shrink-0 bg-card border border-border rounded-xl p-4 overflow-hidden">
+        {/* Sorted List - Full width on mobile, w-56 on Desktop */}
+        <div className="w-full lg:w-56 flex-shrink-0 bg-card border border-border rounded-xl p-4 overflow-hidden h-[200px] lg:h-full">
           <SortedList items={sortedList} />
         </div>
       </div>
