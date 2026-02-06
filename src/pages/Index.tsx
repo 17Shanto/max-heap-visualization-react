@@ -18,10 +18,7 @@ type Mode = "idle" | "inserting" | "extracting";
 type Theme = "dark" | "light";
 
 const Index = () => {
-  // --- Theme State ---
   const [theme, setTheme] = useState<Theme>("light");
-
-  // --- Heap Sort State ---
   const [inputStack, setInputStack] = useState<HeapItem[]>(() =>
     getDefaultData(),
   );
@@ -40,8 +37,6 @@ const Index = () => {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isPlayingRef = useRef(false);
 
-  // --- Theme Effect ---
-  // This toggles the 'dark' class on the HTML element
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
@@ -52,7 +47,6 @@ const Index = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
-  // Keep ref in sync
   useEffect(() => {
     isPlayingRef.current = isPlaying;
   }, [isPlaying]);
