@@ -18,8 +18,6 @@ const TreeVisualization = ({
 }: TreeVisualizationProps) => {
   const width = 900;
   const height = 600;
-
-  // State to track which node is currently clicked
   const [selectedNode, setSelectedNode] = useState<HeapItem | null>(null);
 
   const { nodes, edges } = useMemo(
@@ -45,7 +43,6 @@ const TreeVisualization = ({
         glow: true,
       };
     }
-    // Visual feedback for selection
     if (isSelected) {
       return {
         fill: "hsl(var(--primary))",
@@ -135,7 +132,6 @@ const TreeVisualization = ({
                       />
                     )}
 
-                    {/* Node circle */}
                     <circle
                       cx={node.x}
                       cy={node.y}
@@ -146,7 +142,6 @@ const TreeVisualization = ({
                       className="transition-all duration-300 group-hover:brightness-110"
                     />
 
-                    {/* Weight */}
                     <text
                       x={node.x}
                       y={node.y - 4}
@@ -161,7 +156,6 @@ const TreeVisualization = ({
                       {node.item.weight}
                     </text>
 
-                    {/* Name */}
                     <text
                       x={node.x}
                       y={node.y + 12}
@@ -182,7 +176,6 @@ const TreeVisualization = ({
           </svg>
         )}
 
-        {/* Info Overlay Panel */}
         {selectedNode && (
           <div className="absolute top-4 right-4 w-48 p-4 bg-popover/90 backdrop-blur-sm border border-border rounded-lg shadow-xl animate-in fade-in slide-in-from-right-4">
             <h3 className="text-xs font-bold uppercase text-muted-foreground mb-2">

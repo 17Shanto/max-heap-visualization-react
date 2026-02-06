@@ -28,7 +28,6 @@ const InputStack = ({ items, onAddItem }: InputStackProps) => {
         Input Stack
       </h2>
 
-      {/* Add item form */}
       <div className="flex gap-2 mb-3">
         <input
           type="number"
@@ -46,7 +45,6 @@ const InputStack = ({ items, onAddItem }: InputStackProps) => {
         </button>
       </div>
 
-      {/* Stack items */}
       <div className="flex-1 overflow-y-auto space-y-1.5 pr-1">
         {items.length === 0 ? (
           <p className="text-xs text-muted-foreground text-center py-4">

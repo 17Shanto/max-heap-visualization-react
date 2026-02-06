@@ -204,7 +204,6 @@ const Index = () => {
     stepIndexRef.current = 0;
   }, [clearTimer]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => clearTimer();
   }, [clearTimer]);
@@ -213,8 +212,6 @@ const Index = () => {
   const canExtract = heap.length > 0 && !isPlaying;
 
   return (
-    // Replaced h-screen with h-dvh (dynamic viewport height) for better mobile support
-    // Added overflow handling logic
     <div className="flex flex-col h-dvh bg-background lg:overflow-hidden overflow-y-auto">
       {/* Header */}
       <header className="flex-shrink-0 flex items-center justify-between px-4 lg:px-6 py-3 border-b border-border bg-card">
@@ -233,7 +230,6 @@ const Index = () => {
         </span>
       </header>
 
-      {/* Controls */}
       <div className="flex-shrink-0 px-4 lg:px-6 py-3">
         <Controls
           isPlaying={isPlaying}
@@ -250,16 +246,10 @@ const Index = () => {
         />
       </div>
 
-      {/* Main content - Flex Col on Mobile, Row on Desktop */}
       <div className="flex-1 flex flex-col lg:flex-row gap-4 px-4 lg:px-6 pb-4 lg:overflow-hidden">
-        {/* Input Stack - Full width on mobile, w-72 on Desktop */}
-        {/* On mobile, we let it be auto height, on desktop we fill height */}
         <div className="w-full lg:w-72 flex-shrink-0 bg-card border border-border rounded-xl p-4 overflow-hidden h-[300px] lg:h-full">
           <InputStack items={inputStack} onAddItem={handleAddItem} />
         </div>
-
-        {/* Tree Visualization - Full width on mobile, Flex-1 on Desktop */}
-        {/* Added min-h to ensure visibility on mobile */}
         <div className="w-full lg:flex-1 bg-card border border-border rounded-xl p-4 overflow-hidden flex flex-col min-h-[400px] lg:min-h-0 h-full">
           <TreeVisualization
             heap={heap}
@@ -269,7 +259,6 @@ const Index = () => {
           />
         </div>
 
-        {/* Sorted List - Full width on mobile, w-56 on Desktop */}
         <div className="w-full lg:w-56 flex-shrink-0 bg-card border border-border rounded-xl p-4 overflow-hidden h-[200px] lg:h-full">
           <SortedList items={sortedList} />
         </div>
