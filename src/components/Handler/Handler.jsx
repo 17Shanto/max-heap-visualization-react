@@ -1,11 +1,14 @@
 import React, { useRef, useState } from "react";
 import { useGraphData } from "../../context/DataContext";
 import data from "../../../public/data";
+import { FaPlay } from "react-icons/fa";
+import { FaPause } from "react-icons/fa";
 
 const Handler = () => {
   const [id, setId] = useState(31);
   const { graphData, updateGraphData } = useGraphData();
   const [isResetting, setIsResetting] = useState(false);
+  const [isPlay, setIsPlay] = useState(true);
   const weightInputRef = useRef(null);
 
   const handleSubmit = () => {
@@ -50,7 +53,23 @@ const Handler = () => {
       <div className="">
         <h1 className="text-2xl fieldset-legend">Run Heap Sort</h1>
         <div className="mt-4">
-          <button className="btn btn-outline">Play</button>
+          <button className="btn btn-outline">
+            {isPlay ? (
+              <div className="flex items-center gap-1">
+                <span className="text-error">
+                  <FaPause />
+                </span>
+                Pause
+              </div>
+            ) : (
+              <div className="flex items-center gap-1">
+                <span className="text-success">
+                  <FaPlay />
+                </span>
+                Play
+              </div>
+            )}
+          </button>
         </div>
       </div>
 
