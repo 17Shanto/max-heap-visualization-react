@@ -47,6 +47,19 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        node: {
+          DEFAULT: "hsl(var(--node))",
+          foreground: "hsl(var(--node-foreground))",
+          highlight: "hsl(var(--node-highlight))",
+          "highlight-foreground": "hsl(var(--node-highlight-foreground))",
+          sorted: "hsl(var(--node-sorted))",
+          "sorted-foreground": "hsl(var(--node-sorted-foreground))",
+          extracting: "hsl(var(--node-extracting))",
+          "extracting-foreground": "hsl(var(--node-extracting-foreground))",
+        },
+        edge: "hsl(var(--edge-color))",
+        "stack-bg": "hsl(var(--stack-bg))",
+        "sorted-bg": "hsl(var(--sorted-bg))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -57,6 +70,11 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      fontFamily: {
+        display: ['"Space Grotesk"', 'sans-serif'],
+        body: ['"Space Grotesk"', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
       },
       borderRadius: {
         lg: "var(--radius)",
