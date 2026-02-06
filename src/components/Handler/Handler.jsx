@@ -3,13 +3,22 @@ import { useGraphData } from "../../context/DataContext";
 import data from "../../../public/data";
 import { FaPlay } from "react-icons/fa";
 import { FaPause } from "react-icons/fa";
+import { MdOutlineResetTv } from "react-icons/md";
 
 const Handler = () => {
   const [id, setId] = useState(31);
   const { graphData, updateGraphData } = useGraphData();
   const [isResetting, setIsResetting] = useState(false);
-  const [isPlay, setIsPlay] = useState(true);
+  const [isPlay, setIsPlay] = useState(false);
   const weightInputRef = useRef(null);
+
+  const handlePlayHeapSort = () => {
+    setIsPlay(() => setIsPlay(true));
+  };
+
+  const handlePauseHeapSort = () => {
+    setIsPlay(() => setIsPlay(false));
+  };
 
   const handleSubmit = () => {
     setId((prevId) => prevId + 1);
@@ -53,22 +62,19 @@ const Handler = () => {
       <div className="">
         <h1 className="text-2xl fieldset-legend">Run Heap Sort</h1>
         <div className="mt-4">
-          <button className="btn btn-outline">
-            {isPlay ? (
-              <div className="flex items-center gap-1">
-                <span className="text-error">
-                  <FaPause />
-                </span>
-                Pause
-              </div>
-            ) : (
-              <div className="flex items-center gap-1">
-                <span className="text-success">
-                  <FaPlay />
-                </span>
-                Play
-              </div>
-            )}
+          <button
+            onClick={isPlay ? handlePauseHeapSort : handlePlayHeapSort}
+            className="btn btn-outline min-w-32" // Added min-width to stop resizing
+          >
+            <div className="flex items-center gap-2">
+              {/* Icon Section */}
+              <span className={isPlay ? "text-error" : "text-success"}>
+                {isPlay ? <FaPause /> : <FaPlay />}
+              </span>
+
+              {/* Text Section - Added explicit span to ensure visibility */}
+              <span>{isPlay ? "Pause" : "Play"}</span>
+            </div>
           </button>
         </div>
       </div>
@@ -76,13 +82,19 @@ const Handler = () => {
       <div className="mt-4">
         <button
           onClick={handleReset}
-          className="btn btn-error"
+          className="btn btn-ghost  min-w-32"
           disabled={isResetting}
         >
           {isResetting ? (
             <span className="loading loading-infinity text-2xl text-info"></span>
           ) : (
-            <span>Reset Heap</span>
+            <div className="flex items-center gap-1">
+              {" "}
+              <span className="text-xl text-info">
+                <MdOutlineResetTv />
+              </span>{" "}
+              Reset Heap
+            </div>
           )}
         </button>
       </div>
