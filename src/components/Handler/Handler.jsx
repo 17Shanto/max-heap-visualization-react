@@ -13,7 +13,7 @@ const Handler = () => {
     setIsPlay,
     resetVisualization,
     startExtraction,
-    algorithmMode, // UPDATED: Matches new Context variable
+    algorithmMode,
     inputIndex,
   } = useGraphData();
 
@@ -30,9 +30,6 @@ const Handler = () => {
 
     setIdCounter((prev) => prev + 1);
     const weightValue = parseFloat(value);
-
-    // Add to inputData.
-    // The loop in DataContext will automatically pick this up on the next tick
     const newData = [
       ...inputData,
       { personId: idCounter, weight: weightValue },
@@ -44,23 +41,18 @@ const Handler = () => {
   const handleReset = () => {
     setIsResetting(true);
     resetVisualization();
-    // Reset to initial data
     setTimeout(() => {
       updateInputData(initialData);
       setIsResetting(false);
     }, 500);
   };
 
-  // --- Logic Helpers ---
   const isBuilding = algorithmMode === "IDLE" || algorithmMode === "BUILDING";
   const isExtracting = algorithmMode === "EXTRACTING";
   const isDone = algorithmMode === "DONE";
-
-  // Check if we have processed all items in the input array
   const isBuildComplete =
     inputIndex >= inputData.length && inputData.length > 0;
 
-  // Dynamic Button Text
   const getPlayButtonText = () => {
     if (isPlay) return "Pause";
     if (isExtracting) return "Resume Sort";
@@ -70,7 +62,6 @@ const Handler = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Input Section */}
       <div className="">
         <h1 className="fieldset-legend text-2xl mb-2">Add New Weight</h1>
         <div className="flex flex-1 items-center gap-2">
@@ -88,8 +79,6 @@ const Handler = () => {
       </div>
 
       <div className="divider">Controls</div>
-
-      {/* Main Controls */}
       <div className="grid grid-cols-2 gap-2">
         <button
           onClick={handleTogglePlay}
@@ -114,20 +103,16 @@ const Handler = () => {
           )}
         </button>
       </div>
-
-      {/* Extract / Sort Section */}
       <div className="mt-2">
         <h1 className="fieldset-legend text-xl mb-2">Heap Sort Phase</h1>
         <button
           onClick={startExtraction}
-          // Button is active only when building is done and we haven't started sorting yet
           disabled={!isBuildComplete || isExtracting || isDone}
           className="btn btn-primary w-full"
         >
           <FaSortAmountDown /> Extract All (Sort)
         </button>
 
-        {/* Status Text Area */}
         <div className="text-xs text-slate-500 mt-2 h-4">
           {isExtracting && (
             <span className="text-primary font-semibold animate-pulse">
