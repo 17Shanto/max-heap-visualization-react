@@ -30,33 +30,34 @@ const Handler = () => {
   return (
     <div>
       <div className="">
-        <fieldset className="fieldset">
-          <h1 className="fieldset-legend text-2xl">Please Enter Weight</h1>
-          <input
-            type="text"
-            className="input input-neutral"
-            placeholder="Person Weight"
-            ref={weightInputRef}
-          />
-        </fieldset>
-        <div className="">
-          <button onClick={handleSubmit} className="btn btn-warning mt-2">
+        <h1 className="fieldset-legend text-2xl">Please Enter Weight</h1>
+        <div className="flex flex-1 items-center gap-2">
+          <fieldset className="fieldset flex-1">
+            <input
+              type="text"
+              className="input input-neutral w-full"
+              placeholder="Person Weight"
+              ref={weightInputRef}
+            />
+          </fieldset>
+
+          <button onClick={handleSubmit} className="btn btn-warning">
             Submit
           </button>
         </div>
+      </div>
 
-        <div className="mt-4">
-          <button
-            onClick={handleReset}
-            className="btn btn-outline"
-            disabled={isResetting}
-          >
-            {isResetting && (
-              <span className="loading loading-infinity text-2xl text-info"></span>
-            )}
-            Reset Data
-          </button>
-        </div>
+      <div className="mt-4">
+        <button
+          onClick={handleReset}
+          className="btn btn-outline"
+          disabled={isResetting}
+        >
+          {isResetting && (
+            <span className="loading loading-infinity text-2xl text-info"></span>
+          )}
+          Reset Data
+        </button>
       </div>
     </div>
   );
