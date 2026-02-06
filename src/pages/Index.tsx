@@ -13,6 +13,8 @@ import {
   generateInsertionSteps,
   generateExtractionSteps,
 } from "@/utils/heapUtils";
+import { FaSun } from "react-icons/fa";
+import { IoMoon } from "react-icons/io5";
 
 type Mode = "idle" | "inserting" | "extracting";
 type Theme = "dark" | "light";
@@ -233,50 +235,22 @@ const Index = () => {
             Max-Heap · Descending Order
           </span>
 
-          {/* Theme Toggle Button */}
+          <span className="font-bold">Theme</span>
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-md hover:bg-primary hover:text-accent-foreground transition-colors border border-transparent hover:border-border"
+            className="btn"
             title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
           >
             {" "}
             {theme === "dark" ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2v2" />
-                <path d="M12 20v2" />
-                <path d="m4.93 4.93 1.41 1.41" />
-                <path d="m17.66 17.66 1.41 1.41" />
-                <path d="M2 12h2" />
-                <path d="M20 12h2" />
-                <path d="m6.34 17.66-1.41 1.41" />
-                <path d="m19.07 4.93-1.41 1.41" />
-              </svg>
+              <span className="text-yellow-300 text-xl">
+                <FaSun />
+              </span>
             ) : (
               // Moon Icon
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-              </svg>
+              <span className="text-black text-2xl">
+                <IoMoon />
+              </span>
             )}
           </button>
         </div>
