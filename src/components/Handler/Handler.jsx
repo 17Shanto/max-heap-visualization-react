@@ -47,16 +47,24 @@ const Handler = () => {
         </div>
       </div>
 
+      <div className="">
+        <h1 className="text-2xl fieldset-legend">Run Heap Sort</h1>
+        <div className="mt-4">
+          <button className="btn btn-outline">Play</button>
+        </div>
+      </div>
+
       <div className="mt-4">
         <button
           onClick={handleReset}
-          className="btn btn-outline"
+          className="btn btn-error"
           disabled={isResetting}
         >
-          {isResetting && (
+          {isResetting ? (
             <span className="loading loading-infinity text-2xl text-info"></span>
+          ) : (
+            <span>Reset Heap</span>
           )}
-          Reset Data
         </button>
       </div>
     </div>
