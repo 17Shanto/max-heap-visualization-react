@@ -2,6 +2,7 @@ import React from "react";
 import TreeGraph from "./components/Tree/TreeGraph";
 import Handler from "./components/Handler/Handler";
 import { DataProvider } from "./context/DataContext";
+import InputStack from "./components/InputStack/InputStack";
 
 const App = () => {
   return (
@@ -26,7 +27,12 @@ const App = () => {
                 <Handler></Handler>
               </div>
               <div className="lg:col-span-3">
-                <TreeGraph></TreeGraph>
+                <div className="">
+                  <InputStack></InputStack>
+                </div>
+                <div className="">
+                  <TreeGraph></TreeGraph>
+                </div>
               </div>
             </div>
           </div>

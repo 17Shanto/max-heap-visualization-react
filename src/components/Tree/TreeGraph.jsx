@@ -26,7 +26,6 @@ export default function TreeGraph() {
     });
   };
   const { graphData } = useGraphData();
-  console.log(graphData);
   const tree_data = getDescendingTreeData(graphData);
   const translate = { x: 600, y: 50 };
   return (
