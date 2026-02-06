@@ -1,65 +1,99 @@
-function heapify(arr, n, i) {
-  let extreme = i;
-  let left = 2 * i + 1;
-  let right = 2 * i + 2;
+// src/utils/utils.js
 
-  if (left < n && arr[left].weight < arr[extreme].weight) {
-    extreme = left;
+export const getParentIndex = (i) => Math.floor((i - 1) / 2);
+export const getLeftChildIndex = (i) => 2 * i + 1;
+export const getRightChildIndex = (i) => 2 * i + 2;
+
+// Converts a flat array to the hierarchical object structure required by react-d3-tree
+export const arrayToTreeData = (data, index = 0, highlightIndices = {}) => {
+  if (index >= data.length || !data[index]) return null;
+
+  const currentNode = data[index];
+
+  // Determine color based on whether this node is currently being compared/swapped
+  let nodeColor = "#ffffff"; // Default white
+  let strokeColor = "#3b82f6"; // Default blue
+
+  if (index === highlightIndices.current) {
+    nodeColor = "#fca5a5"; // Red (Active item)
+  } else if (index === highlightIndices.target) {
+    nodeColor = "#86efac"; // Green (Target/Swap partner)
   }
 
-  if (right < n && arr[right].weight < arr[extreme].weight) {
-    extreme = right;
-  }
-
-  if (extreme !== i) {
-    [arr[i], arr[extreme]] = [arr[extreme], arr[i]];
-    heapify(arr, n, extreme);
-  }
-}
-
-function performDescendingHeapSort(data) {
-  let arr = [...data];
-  let n = arr.length;
-  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
-    heapify(arr, n, i);
-  }
-
-  for (let i = n - 1; i > 0; i--) {
-    [arr[0], arr[i]] = [arr[i], arr[0]];
-    heapify(arr, i, 0);
-  }
-
-  return arr;
-}
-
-function convertToTreeFormat(arr, index = 0) {
-  if (index >= arr.length) return null;
-
-  const node = {
-    name: `${arr[index].weight}`,
+  return {
+    name: `${currentNode.weight}`,
     attributes: {
-      personId: arr[index].personId,
-      weight: arr[index].weight,
+      id: currentNode.personId,
+      weight: currentNode.weight,
+      nodeColor,
+      strokeColor,
     },
-    children: [],
+    children: [
+      arrayToTreeData(data, getLeftChildIndex(index), highlightIndices),
+      arrayToTreeData(data, getRightChildIndex(index), highlightIndices),
+    ].filter((child) => child !== null), // Remove null children for cleaner tree
   };
+};
 
-  const leftIndex = 2 * index + 1;
-  const rightIndex = 2 * index + 2;
+/**
+ * LOGIC: Single Step of Heapify Up
+ * Returns: { newHeap, nextIndex, swapped (bool) }
+ */
+export const stepHeapifyUp = (heap, currentIndex) => {
+  if (currentIndex === 0)
+    return { newHeap: heap, nextIndex: null, swapped: false };
 
-  const leftChild = convertToTreeFormat(arr, leftIndex);
-  const rightChild = convertToTreeFormat(arr, rightIndex);
+  const parentIndex = getParentIndex(currentIndex);
+  const newHeap = [...heap];
 
-  if (leftChild) node.children.push(leftChild);
-  if (rightChild) node.children.push(rightChild);
+  // MAX HEAP logic: If Child > Parent, Swap
+  if (newHeap[currentIndex].weight > newHeap[parentIndex].weight) {
+    [newHeap[currentIndex], newHeap[parentIndex]] = [
+      newHeap[parentIndex],
+      newHeap[currentIndex],
+    ];
+    return {
+      newHeap,
+      nextIndex: parentIndex,
+      swapped: true,
+      targetIndex: parentIndex,
+    };
+  }
 
-  return node;
-}
+  return { newHeap, nextIndex: null, swapped: false, targetIndex: parentIndex };
+};
 
-function getDescendingTreeData(data) {
-  const sortedArray = performDescendingHeapSort(data);
-  const treeRoot = convertToTreeFormat(sortedArray);
-  return [treeRoot];
-}
+/**
+ * LOGIC: Single Step of Heapify Down
+ * Returns: { newHeap, nextIndex, swapped (bool) }
+ */
+export const stepHeapifyDown = (heap, currentIndex) => {
+  const leftChild = getLeftChildIndex(currentIndex);
+  const rightChild = getRightChildIndex(currentIndex);
+  let largest = currentIndex;
+  const newHeap = [...heap];
 
-export default getDescendingTreeData;
+  if (
+    leftChild < newHeap.length &&
+    newHeap[leftChild].weight > newHeap[largest].weight
+  ) {
+    largest = leftChild;
+  }
+
+  if (
+    rightChild < newHeap.length &&
+    newHeap[rightChild].weight > newHeap[largest].weight
+  ) {
+    largest = rightChild;
+  }
+
+  if (largest !== currentIndex) {
+    [newHeap[currentIndex], newHeap[largest]] = [
+      newHeap[largest],
+      newHeap[currentIndex],
+    ];
+    return { newHeap, nextIndex: largest, swapped: true, targetIndex: largest };
+  }
+
+  return { newHeap, nextIndex: null, swapped: false, targetIndex: null };
+};

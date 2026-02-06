@@ -1,102 +1,145 @@
 import React, { useRef, useState } from "react";
 import { useGraphData } from "../../context/DataContext";
-import data from "../../../public/data";
-import { FaPlay } from "react-icons/fa";
-import { FaPause } from "react-icons/fa";
+import initialData from "../../../public/data";
+import { FaPlay, FaPause, FaSortAmountDown } from "react-icons/fa";
 import { MdOutlineResetTv } from "react-icons/md";
 
 const Handler = () => {
-  const [id, setId] = useState(31);
-  const { graphData, updateGraphData } = useGraphData();
+  const [idCounter, setIdCounter] = useState(31);
+  const {
+    inputData,
+    updateInputData,
+    isPlay,
+    setIsPlay,
+    resetVisualization,
+    startExtraction,
+    algorithmMode, // UPDATED: Matches new Context variable
+    inputIndex,
+  } = useGraphData();
+
   const [isResetting, setIsResetting] = useState(false);
-  const [isPlay, setIsPlay] = useState(false);
   const weightInputRef = useRef(null);
 
-  const handlePlayHeapSort = () => {
-    setIsPlay(() => setIsPlay(true));
-  };
-
-  const handlePauseHeapSort = () => {
-    setIsPlay(() => setIsPlay(false));
+  const handleTogglePlay = () => {
+    setIsPlay(!isPlay);
   };
 
   const handleSubmit = () => {
-    setId((prevId) => prevId + 1);
     const value = weightInputRef.current.value;
     if (!value) return;
+
+    setIdCounter((prev) => prev + 1);
     const weightValue = parseFloat(value);
-    const newData = [...graphData, { personId: id, weight: weightValue }];
-    updateGraphData(newData);
+
+    // Add to inputData.
+    // The loop in DataContext will automatically pick this up on the next tick
+    const newData = [
+      ...inputData,
+      { personId: idCounter, weight: weightValue },
+    ];
+    updateInputData(newData);
     weightInputRef.current.value = "";
   };
 
   const handleReset = () => {
     setIsResetting(true);
+    resetVisualization();
+    // Reset to initial data
     setTimeout(() => {
-      const newData = [...data];
-      updateGraphData(newData);
+      updateInputData(initialData);
       setIsResetting(false);
     }, 500);
   };
 
+  // --- Logic Helpers ---
+  const isBuilding = algorithmMode === "IDLE" || algorithmMode === "BUILDING";
+  const isExtracting = algorithmMode === "EXTRACTING";
+  const isDone = algorithmMode === "DONE";
+
+  // Check if we have processed all items in the input array
+  const isBuildComplete =
+    inputIndex >= inputData.length && inputData.length > 0;
+
+  // Dynamic Button Text
+  const getPlayButtonText = () => {
+    if (isPlay) return "Pause";
+    if (isExtracting) return "Resume Sort";
+    if (isDone) return "Done";
+    return "Play Build";
+  };
+
   return (
-    <div>
+    <div className="flex flex-col gap-4">
+      {/* Input Section */}
       <div className="">
-        <h1 className="fieldset-legend text-2xl">Please Enter Weight</h1>
+        <h1 className="fieldset-legend text-2xl mb-2">Add New Weight</h1>
         <div className="flex flex-1 items-center gap-2">
-          <fieldset className="fieldset flex-1">
-            <input
-              type="text"
-              className="input input-neutral w-full"
-              placeholder="Person Weight"
-              ref={weightInputRef}
-            />
-          </fieldset>
-
+          <input
+            type="number"
+            className="input input-bordered w-full"
+            placeholder="Weight (e.g. 85)"
+            ref={weightInputRef}
+            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+          />
           <button onClick={handleSubmit} className="btn btn-warning">
-            Submit
+            Add
           </button>
         </div>
       </div>
 
-      <div className="">
-        <h1 className="text-2xl fieldset-legend">Run Heap Sort</h1>
-        <div className="mt-4">
-          <button
-            onClick={isPlay ? handlePauseHeapSort : handlePlayHeapSort}
-            className="btn btn-outline min-w-32" // Added min-width to stop resizing
-          >
-            <div className="flex items-center gap-2">
-              {/* Icon Section */}
-              <span className={isPlay ? "text-error" : "text-success"}>
-                {isPlay ? <FaPause /> : <FaPlay />}
-              </span>
+      <div className="divider">Controls</div>
 
-              {/* Text Section - Added explicit span to ensure visibility */}
-              <span>{isPlay ? "Pause" : "Play"}</span>
-            </div>
-          </button>
-        </div>
-      </div>
+      {/* Main Controls */}
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          onClick={handleTogglePlay}
+          disabled={isDone}
+          className={`btn ${isPlay ? "btn-error" : "btn-success"} w-full`}
+        >
+          {isPlay ? <FaPause /> : <FaPlay />}
+          {getPlayButtonText()}
+        </button>
 
-      <div className="mt-4">
         <button
           onClick={handleReset}
-          className="btn btn-ghost  min-w-32"
+          className="btn btn-ghost border-base-300 w-full"
           disabled={isResetting}
         >
           {isResetting ? (
-            <span className="loading loading-infinity text-2xl text-info"></span>
+            <span className="loading loading-spinner"></span>
           ) : (
-            <div className="flex items-center gap-1">
-              {" "}
-              <span className="text-xl text-info">
-                <MdOutlineResetTv />
-              </span>{" "}
-              Reset Heap
-            </div>
+            <>
+              <MdOutlineResetTv className="text-xl" /> Reset
+            </>
           )}
         </button>
+      </div>
+
+      {/* Extract / Sort Section */}
+      <div className="mt-2">
+        <h1 className="fieldset-legend text-xl mb-2">Heap Sort Phase</h1>
+        <button
+          onClick={startExtraction}
+          // Button is active only when building is done and we haven't started sorting yet
+          disabled={!isBuildComplete || isExtracting || isDone}
+          className="btn btn-primary w-full"
+        >
+          <FaSortAmountDown /> Extract All (Sort)
+        </button>
+
+        {/* Status Text Area */}
+        <div className="text-xs text-slate-500 mt-2 h-4">
+          {isExtracting && (
+            <span className="text-primary font-semibold animate-pulse">
+              Sorting in progress... (Heapify Down)
+            </span>
+          )}
+          {isDone && (
+            <span className="text-green-600 font-bold">Sorting Complete!</span>
+          )}
+          {isBuilding && !isBuildComplete && "Building Max Heap..."}
+          {isBuilding && isBuildComplete && "Tree Built. Ready to Extract."}
+        </div>
       </div>
     </div>
   );
