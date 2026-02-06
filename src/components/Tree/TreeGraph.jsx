@@ -5,7 +5,6 @@ import { getTreePositions } from "../../utils/treeLayout";
 import { getParentIndex } from "../../utils/utils";
 
 const NODE_RADIUS = 20;
-
 export default function TreeGraph() {
   const { heapData, highlightIndices } = useGraphData();
 
@@ -28,16 +27,24 @@ export default function TreeGraph() {
               if (node.index === 0) return null;
               const parent = nodes[getParentIndex(node.index)];
               if (!parent) return null;
-
+              if (
+                !parent ||
+                typeof parent.x !== "number" ||
+                typeof parent.y !== "number" ||
+                typeof node.x !== "number" ||
+                typeof node.y !== "number"
+              ) {
+                return null;
+              }
               return (
                 <motion.line
-                  key={`edge-${parent.index}-${node.index}`}
+                  key={`edge-${parent.personId}-${node.personId}`}
                   initial={{ opacity: 0 }}
                   animate={{
-                    x1: parent.x,
-                    y1: parent.y,
-                    x2: node.x,
-                    y2: node.y,
+                    x1: parent.x ?? 0,
+                    y1: parent.y ?? 0,
+                    x2: node.x ?? 0,
+                    y2: node.y ?? 0,
                     opacity: 1,
                   }}
                   exit={{ opacity: 0 }}
@@ -76,8 +83,8 @@ export default function TreeGraph() {
                   key={node.personId}
                   initial={{ scale: 0, opacity: 0, x: node.x, y: node.y }}
                   animate={{
-                    x: node.x,
-                    y: node.y,
+                    x: node.x ?? 0,
+                    y: node.y ?? 0,
                     scale: 1,
                     opacity: 1,
                     zIndex,
@@ -97,14 +104,14 @@ export default function TreeGraph() {
                     className="text-xs font-bold fill-slate-700 pointer-events-none select-none"
                     style={{ fontSize: "12px" }}
                   >
-                    {node.weight}
+                    W:{node.weight}
                   </text>
                   <text
                     dy="32"
                     textAnchor="middle"
                     className="fill-slate-400 text-[9px] pointer-events-none select-none"
                   >
-                    #{node.personId}
+                    ID:{node.personId}
                   </text>
                 </motion.g>
               );

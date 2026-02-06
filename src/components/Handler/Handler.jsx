@@ -85,7 +85,7 @@ const Handler = () => {
           disabled={isDone}
           className={`btn ${isPlay ? "btn-error" : "btn-success"} w-full`}
         >
-          {isPlay ? <FaPause /> : <FaPlay />}
+          {isPlay ? <FaPause key="pause-icon" /> : <FaPlay key="play-icon" />}
           {getPlayButtonText()}
         </button>
 
@@ -95,10 +95,10 @@ const Handler = () => {
           disabled={isResetting}
         >
           {isResetting ? (
-            <span className="loading loading-spinner"></span>
+            <span className="loading loading-infinity text-info"></span>
           ) : (
             <>
-              <MdOutlineResetTv className="text-xl" /> Reset
+              <MdOutlineResetTv className="text-xl text-info" /> Reset
             </>
           )}
         </button>

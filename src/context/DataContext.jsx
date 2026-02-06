@@ -4,7 +4,9 @@ import React, {
   useContext,
   useEffect,
   useCallback,
+  useRef,
 } from "react";
+import { flushSync } from "react-dom"; // Add this import
 import initialData from "../../public/data";
 import { stepHeapifyUp, stepHeapifyDown } from "../utils/utils";
 
@@ -14,6 +16,7 @@ export const DataProvider = ({ children }) => {
   const [inputData, setInputData] = useState(initialData);
   const [heapData, setHeapData] = useState([]);
   const [sortedData, setSortedData] = useState([]);
+
   const [isPlay, setIsPlay] = useState(false);
   const [speed, setSpeed] = useState(800);
   const [algorithmMode, setAlgorithmMode] = useState("IDLE");
@@ -25,6 +28,9 @@ export const DataProvider = ({ children }) => {
     current: null,
     target: null,
   });
+
+  const rafRef = useRef(null);
+  const lastTickTime = useRef(0);
 
   const updateInputData = (newData) => {
     setInputData(newData);
@@ -57,15 +63,20 @@ export const DataProvider = ({ children }) => {
           heapData,
           activeHeapIndex,
         );
-        setHighlightIndices({ current: activeHeapIndex, target: targetIndex });
 
-        if (swapped) {
-          setHeapData(newHeap);
-          setActiveHeapIndex(nextIndex);
-        } else {
-          setActiveHeapIndex(null);
-          setHighlightIndices({ current: null, target: null });
-        }
+        flushSync(() => {
+          setHighlightIndices({
+            current: activeHeapIndex,
+            target: targetIndex,
+          });
+          if (swapped) {
+            setHeapData(newHeap);
+            setActiveHeapIndex(nextIndex);
+          } else {
+            setActiveHeapIndex(null);
+            setHighlightIndices({ current: null, target: null });
+          }
+        });
         return;
       }
 
@@ -73,9 +84,12 @@ export const DataProvider = ({ children }) => {
         setAlgorithmMode("BUILDING");
         const newItem = inputData[inputIndex];
         const newHeap = [...heapData, newItem];
-        setHeapData(newHeap);
-        setActiveHeapIndex(newHeap.length - 1);
-        setInputIndex((prev) => prev + 1);
+
+        flushSync(() => {
+          setHeapData(newHeap);
+          setActiveHeapIndex(newHeap.length - 1);
+          setInputIndex((prev) => prev + 1);
+        });
         return;
       }
 
@@ -96,11 +110,14 @@ export const DataProvider = ({ children }) => {
         const lastIdx = newHeap.length - 1;
         [newHeap[0], newHeap[lastIdx]] = [newHeap[lastIdx], newHeap[0]];
         const maxItem = newHeap.pop();
-        setHeapData(newHeap);
-        setSortedData((prev) => [maxItem, ...prev]);
-        if (newHeap.length > 0) {
-          setActiveHeapIndex(0);
-        }
+
+        flushSync(() => {
+          setHeapData(newHeap);
+          setSortedData((prev) => [maxItem, ...prev]);
+          if (newHeap.length > 0) {
+            setActiveHeapIndex(0);
+          }
+        });
         return;
       }
 
@@ -108,25 +125,45 @@ export const DataProvider = ({ children }) => {
         heapData,
         activeHeapIndex,
       );
-      setHighlightIndices({ current: activeHeapIndex, target: targetIndex });
 
-      if (swapped) {
-        setHeapData(newHeap);
-        setActiveHeapIndex(nextIndex);
-      } else {
-        setActiveHeapIndex(null);
-        setHighlightIndices({ current: null, target: null });
-      }
+      flushSync(() => {
+        setHighlightIndices({ current: activeHeapIndex, target: targetIndex });
+        if (swapped) {
+          setHeapData(newHeap);
+          setActiveHeapIndex(nextIndex);
+        } else {
+          setActiveHeapIndex(null);
+          setHighlightIndices({ current: null, target: null });
+        }
+      });
     }
   }, [algorithmMode, heapData, inputData, inputIndex, activeHeapIndex]);
 
+  const animate = useCallback(
+    (timestamp) => {
+      if (!lastTickTime.current) lastTickTime.current = timestamp;
+      const delta = timestamp - lastTickTime.current;
+
+      if (delta >= speed) {
+        tick();
+        lastTickTime.current = timestamp;
+      }
+
+      if (isPlay && algorithmMode !== "DONE") {
+        rafRef.current = requestAnimationFrame(animate);
+      }
+    },
+    [isPlay, algorithmMode, tick, speed],
+  );
+
   useEffect(() => {
-    let interval;
     if (isPlay && algorithmMode !== "DONE") {
-      interval = setInterval(tick, speed);
+      rafRef.current = requestAnimationFrame(animate);
     }
-    return () => clearInterval(interval);
-  }, [isPlay, algorithmMode, tick, speed]);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [isPlay, algorithmMode, animate]);
 
   return (
     <DataContext.Provider
@@ -142,6 +179,8 @@ export const DataProvider = ({ children }) => {
         startExtraction,
         resetVisualization,
         highlightIndices,
+        speed,
+        setSpeed,
       }}
     >
       {children}

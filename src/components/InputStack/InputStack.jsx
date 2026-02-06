@@ -42,11 +42,13 @@ const InputStack = () => {
                 `}
               >
                 <span className="text-sm font-bold">{x.weight}</span>
-                <span className="text-[9px] text-slate-500">#{x.personId}</span>
+                <span className="text-[9px] text-slate-500">
+                  ID: {x.personId}
+                </span>
               </div>
             );
           })}
-          {/* If all processed */}
+
           {inputIndex >= inputData.length && (
             <div className="flex items-center text-green-600 text-sm italic pr-4">
               All Added
