@@ -5,34 +5,22 @@ interface SortedListProps {
 }
 
 const SortedList = ({ items }: SortedListProps) => {
-  // Function to handle the download
   const handleDownload = () => {
     if (items.length === 0) return;
-
-    // 1. Create JSON string
     const jsonString = JSON.stringify(items, null, 2);
-
-    // 2. Create a Blob from the string
     const blob = new Blob([jsonString], { type: "application/json" });
-
-    // 3. Create a temporary download URL
     const url = URL.createObjectURL(blob);
-
-    // 4. Create a temporary link element and trigger click
     const link = document.createElement("a");
     link.href = url;
-    link.download = "sorted-list.json"; // Filename
+    link.download = "sorted-list.json";
     document.body.appendChild(link);
     link.click();
-
-    // 5. Cleanup
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header with Title and Download Button */}
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-display font-semibold uppercase tracking-wider text-muted-foreground">
           Sorted (Descending)
@@ -44,7 +32,6 @@ const SortedList = ({ items }: SortedListProps) => {
             className="text-xs flex items-center gap-1.5 px-2 py-1 rounded-md bg-secondary/50 hover:bg-secondary text-secondary-foreground transition-colors border border-border/50"
             title="Download sorted list as JSON"
           >
-            {/* Download Icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="12"
