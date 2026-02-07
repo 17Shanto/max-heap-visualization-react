@@ -7,7 +7,45 @@ A web application designed to visualize the Heap Sort algorithm with an interact
 ## 🔗 Live Demo
 Check out the live application here: **[Heap Sort Visualizer](https://whimsical-froyo-4979be.netlify.app/)**
 
----
+## Demo
+<table width="100%">
+  <tr>
+    <td width="50%" align="center">
+      <b>1. Play & Visualization</b><br>
+      <img src="https://github.com/user-attachments/assets/6fc38046-d6a7-44d7-ad13-7085b3d9c107" width="100%" />
+      <br>
+      <i>Controls to play, pause, speed, and animate, Manually step forward through the sort.</i>
+    </td>
+    <td width="50%" align="center">
+      <b>2. Add Custom Data</b><br>
+      <img src="https://github.com/user-attachments/assets/8c2eb377-f200-4699-87e2-a242dc780fba" width="100%" />
+      <br>
+      <i>Input custom weight to visualize.</i>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <b>3. Clickavle Nodes</b><br>
+      <img src="https://github.com/user-attachments/assets/1419bad7-3bbb-42e7-a0a9-44e02afc1908" width="100%" />
+      <br>
+      <i>Click on node for more detailes</i>
+    </td>
+    <td align="center">
+      <b>4. Extract Max & Export JSON</b><br>
+      <img src="https://github.com/user-attachments/assets/59698c3e-6fb4-4ec5-b9d2-38b2abe84c0a" width="100%" />
+      <br>
+      <i>Visualize extracting the root node and Export the sorted list as JSON or reset the board.</i>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <b>5. Toggle Theme & Reset</b><br>
+      <img src="https://github.com/user-attachments/assets/3e0e7049-74f2-4915-9cc5-45db9152609f" width="40%" />
+      <br>
+      <i>Toggle dark and light theme and reset data</i>
+    </td>
+  </tr>
+</table>
 
 ## Features
 
