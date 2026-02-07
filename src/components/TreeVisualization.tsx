@@ -65,7 +65,6 @@ const TreeVisualization = ({
         Max-Heap Tree
       </h2>
 
-      {/* Status message */}
       <div className="mb-2 px-3 py-2 rounded-lg bg-muted/50 border border-border min-h-[40px] flex items-center justify-between">
         <p className="text-xs font-mono text-muted-foreground leading-relaxed">
           {message || "Idle — add items and press Play to start"}
@@ -88,7 +87,6 @@ const TreeVisualization = ({
             viewBox={`0 0 ${width} ${height}`}
             className="w-full h-full"
             preserveAspectRatio="xMidYMid meet"
-            // Deselect when clicking the background
             onClick={() => setSelectedNode(null)}
           >
             <g>
@@ -114,11 +112,10 @@ const TreeVisualization = ({
                     key={node.item.id}
                     className="cursor-pointer group"
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent background click from firing
+                      e.stopPropagation();
                       setSelectedNode(node.item);
                     }}
                   >
-                    {/* Glow effect */}
                     {style.glow && (
                       <circle
                         cx={node.x}
