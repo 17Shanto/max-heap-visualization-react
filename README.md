@@ -4,7 +4,7 @@ A web application designed to visualize the Heap Sort algorithm with an interact
 
 
 
-## 🔗 Live Demo
+## 🔗 Live Link
 Check out the live application here: **[Heap Sort Visualizer](https://whimsical-froyo-4979be.netlify.app/)**
 
 ## Demo
