@@ -62,6 +62,21 @@ This visualizer comes packed with tools to help you understand the algorithm:
 
 ---
 
+## Technologies Used
+
+This project leverages a modern, robust, and type-safe stack:
+
+* **Framework:** [React](https://react.dev/) + [Vite](https://vitejs.dev/)
+* **Language:** [TypeScript](https://www.typescriptlang.org/)
+* **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+* **UI Components:** [Shadcn UI](https://ui.shadcn.com/) (built on [Radix UI](https://www.radix-ui.com/) primitives)
+* **Icons:** [Lucide React](https://lucide.dev/) & [React Icons](https://react-icons.github.io/react-icons/)
+* **State Management:** [TanStack Query](https://tanstack.com/query/latest) (React Query)
+* **Routing:** [React Router DOM](https://reactrouter.com/)
+* **Forms:** [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) (Validation)
+* **Testing:** [Vitest](https://vitest.dev/) & [React Testing Library](https://testing-library.com/)
+* **Other Tools:** `date-fns`, `recharts`, `sonner` (Toasts)
+
 ## How to Run Locally
 
 Follow these steps to get a copy of the project up and running on your local machine.
